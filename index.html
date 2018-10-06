@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://www.marvinj.org/releases/marvinj-0.7.js"></script>
+
+</head>
+<body>
+    <canvas id="canvas" width="770" height="500"></canvas>
+    <div id="result"></div>
+</body>
+</html>
+
+<script>
+    console.time('Performance test');
+    var coordenadas=[];
+    var cumulo=[];
+    var canvas = document.getElementById("canvas");
+    image = new MarvinImage();
+    image.load("lynx.jpg", imageLoaded);
+
+    function imageLoaded(){
+  
+    var orangePixels=0;
+    for(var y=0; y<image.getHeight(); y++){
+        for(var x=0; x<image.getWidth(); x++){
+          var red = image.getIntComponent0(x,y);
+          var green = image.getIntComponent1(x,y);
+          var blue = image.getIntComponent2(x,y);
+          var alpha = image.getAlphaComponent(x,y);
+        
+          // Is Brown?
+          if(90 <= red && red <= 190 && 40 <= green && green <= 85 && 10 <= blue && blue <= 40 && alpha > 0){
+            orangePixels++;
+              //image.setIntColor(x, y, 0,0,0,1);
+              var coords = [x,y];
+              coordenadas.push(coords);
+          }
+        }
+    }
+        
+        var radio = 5;
+        var cantMinVecinos = 1;
+        var pivote=coordenadas[coordenadas.length-1];
+        var cumulo=[],estrellas=[];
+        
+        for(var i=0; i<=7; i++) {
+            cumulo=[];
+            while(cantVecinosCercanos(pivote,radio,coordenadas)>=cantMinVecinos) {
+                for(var j = coordenadas.length -1; j >= 0 ; j--){
+                        if(distEuclidiana(pivote,coordenadas[j])<=radio){
+                            cumulo.push(coordenadas[j]);
+                            image.setIntColor(coordenadas[j][0], coordenadas[j][1], 0,0,0,1);
+                            coordenadas.splice(j, 1);
+                            }
+                        }
+                if((coordenadas[coordenadas.length-1]!=null) && (distEuclidiana(pivote,coordenadas[coordenadas.length-1])<10)) {
+                    pivote=coordenadas[coordenadas.length-1];
+                    }
+                }
+            pivote=coordenadas[coordenadas.length-1];
+            estrellas.push(cumulo);
+        }
+        
+        debugger;
+        console.timeEnd('Performance test');
+        
+        
+        
+        /*        for(var i=0; i<=1; i++) {
+            while(cantVecinosCercanos(pivote,radio,coordenadas)>=cantMinVecinos) {
+                debugger;
+                console.log("hay " + cantVecinosCercanos(pivote,radio,coordenadas) + " vecinos cercanos");
+                for(var j = coordenadas.length -1; j >= 0 ; j--){
+                        if(distEuclidiana(pivote,coordenadas[j])<=radio){
+                            cumulo.push(coordenadas[j]);
+                            image.setIntColor(coordenadas[j][0], coordenadas[j][1], 0,0,0,1);
+                            coordenadas.splice(j, 1);
+                            }
+                        }
+                debugger;
+                pivote=coordenadas[coordenadas.length-1];
+                debugger;
+                }
+            debugger;
+            //pivote=coordenadas[coordenadas.length-2];
+        }
+        console.timeEnd('Performance test');*/
+
+        /*var radio;
+        //var cant=coordenadas.length-1;
+        for (var i=0;i<=18;i++) {
+            var pivote=coordenadas[coordenadas.length-1];
+            console.log("vuelta numero: "+i);
+            if(cantVecinosCercanos(pivote,5,coordenadas)>=5) {
+                console.log("el pivote actual tiene vecinos, hay que expandir");
+                console.log("hay " + cantVecinosCercanos(pivote,5,coordenadas) + " vecinos cercanos");
+                for(var j = coordenadas.length -1; j >= 0 ; j--){
+                    if(distEuclidiana(pivote,coordenadas[j])<=5){
+                        //console.log("el elem: "+coordenadas[j]+" está a dist "+distEuclidiana(pivote,coordenadas[j])+ " del pivote");
+                        cumulo.push(coordenadas[j]);
+                        image.setIntColor(coordenadas[j][0], coordenadas[j][1], 0,0,0,1);
+                        coordenadas.splice(j, 1);
+                        }
+                    }
+            }
+            else{
+                console.log("no hay más vecinos");
+            }
+        }
+        console.timeEnd('Performance test');*/
+        
+        /*var radio;
+        //var cant=coordenadas.length-1;
+        for (var i=0;i<=20;i++) {
+            var pivote=coordenadas[coordenadas.length-1];
+            for(var j = coordenadas.length -1; j >= 0 ; j--){
+                if(distEuclidiana(pivote,coordenadas[j])<=5){
+                    //console.log("el elem: "+coordenadas[j]+" está a dist "+distEuclidiana(pivote,coordenadas[j])+ " del pivote");
+                    cumulo.push(coordenadas[j]);
+                    image.setIntColor(coordenadas[j][0], coordenadas[j][1], 0,0,0,1);
+                    coordenadas.splice(j, 1);
+                    }
+                }
+            console.log(cumulo.length);
+        }*/
+        
+        /*var cumulos=[];
+        var pivote=coordenadas[coordenadas.length-1];
+        //console.log(distEuclidiana(coordenadas[0],coordenadas[1]));
+        for(var j = 0; j<=3;j++){
+            for(var i = coordenadas.length -1; i >= 0 ; i--){
+                
+                var cumulo=[];
+                if(distEuclidiana(pivote,coordenadas[i])<=7){
+                    cumulo.push(coordenadas[i]);
+                    image.setIntColor(coordenadas[i][0], coordenadas[i][1], 0,0,0,1);
+                    coordenadas.splice(i, 1);
+                    cumulos.push(cumulo);
+                    }
+                }
+        }
+        console.log(cumulos);*/
+  
+  image.draw(canvas);
+  
+  document.getElementById("result").innerHTML += "orange pixels: "+orangePixels;
+  }
+    
+    //Determina si un elemento tiene vecinos cercanos en el array dentro del radio, segun la distancia euclidiana
+    function cantVecinosCercanos(elem,radio,array1) {
+        var cantVecinos = 0;
+        for(var i=0; i<=array1.length-1;i++){
+            if(distEuclidiana(elem,array1[i])<=radio) {
+                cantVecinos++;
+            }
+        }
+        return cantVecinos;
+    }
+    
+    function distEuclidiana(array1, array2) {
+        return Math.sqrt(Math.pow(array1[0]-array2[0],2)+Math.pow(array1[1]-array2[1],2));
+    }
+
+
+</script>
+
+
+
+
