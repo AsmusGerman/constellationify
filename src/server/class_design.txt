@@ -1,8 +1,0 @@
-+-------------------+
-| Constellation     |         +--------+
-+-------------------+         | Star   |
-| name: string      | 1     * +--------+
-| image: string     +---------+ Center |
-| centroid: double  |         | Radius |
-| features: double[]|         +--------+
-+--------+----------+

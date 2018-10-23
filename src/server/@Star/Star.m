@@ -1,4 +1,4 @@
-classdef star
+classdef Star
     
     properties
         center
@@ -6,11 +6,10 @@ classdef star
     end
     
     methods
-        function instance = star(center, radius)
+        function instance = Star(center, radius)
             instance.center = center;
             instance.radius = radius;
         end
     end
     
 end
-
