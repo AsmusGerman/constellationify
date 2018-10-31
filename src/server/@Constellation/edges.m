@@ -1,5 +1,9 @@
-function [OA, OB, AB] = edges(instance, first, second)
-    OA = norm(instance.centroid - instance.stars(first).center);
-    OB = norm(instance.centroid - instance.stars(second).center);
-    AB = norm(instance.stars(first).center - instance.stars(second).center);
+function [OA, OB] = edges(instance, first, second)
+    %centroid to first
+    OA = instance.stars(first).center - instance.centroid;
+    %OA = OA/norm(OA)
+
+    %centroid to second
+    OB = instance.stars(second).center - instance.centroid;
+    %OB = OB/norm(OB)
 end

@@ -1,9 +1,9 @@
-function constellations = runByARL3(nAngles, nProportions)
-    constellations = Collection();
-    
-    nConstellations = length(instance.constellations);
+function constellations = runALR3(constellations, nAngles, nProportions)
+    nConstellations = numel(constellations);
+
     for i = 1 : nConstellations
-        constellation = ALR3.Run(constellations(i), nAngles, nProportions);
-        constellations = constellations.add(constellation);
+        constellations(i).features = ALR3.run(constellations(i), nAngles, nProportions);
     end
+
+    
 end

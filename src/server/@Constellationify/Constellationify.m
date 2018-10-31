@@ -21,6 +21,10 @@ classdef Constellationify
                 constellation = Constellation(url, name);
                 constellations = constellations.add(constellation);
             end
+
+            constellations = [constellations.value];
+            %save the constellations to an isolated file
+            Constellationify.save('constellations', constellations);
         end
 
         function files = read(directory, extension)
@@ -35,12 +39,24 @@ classdef Constellationify
             end
         end
 
+        function save(name, data)
+            name = strcat(name,'.mat');
+            save(name,'data');
+        end
+
+        function data = import(name)
+            name = strcat(name,'.mat');
+            data = importdata(name);
+        end
+
         function [name, url] = fileinfo(file)
             name = strsplit(char(file),'.');
             name = name(1); %file name without extension
 
             url = strcat(Constellationify.set, file); %full name
         end
+
+        constellations = runALR3(instance, constellations, nAngles, nProportions)
     end
 end
 

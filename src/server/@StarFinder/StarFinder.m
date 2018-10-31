@@ -8,8 +8,9 @@ classdef StarFinder
 
             for i = 1 : nCenters
                 star = Star(centers(i, :), radii(i, :));
-                stars.add(star);
+                stars = stars.add(star);
             end
+            stars = [stars.value];
         end
     end
 end
