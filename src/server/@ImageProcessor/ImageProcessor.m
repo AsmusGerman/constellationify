@@ -1,14 +1,26 @@
 classdef ImageProcessor
     methods(Static)
-        function image = process(image)
+        
+       function name = getName(file)
+            name = strsplit(char(file),'.');
+            name = name(1); %file name without extension
+        end
 
+        function url = getFullName(file)
+            url = strcat(Constellationify.set, file); %full name
+        end
+
+        function image = process(image)
             %read the file by its full name
-            image = imread(char(image));           
-            
+            image = imread(char(image));
+            image = ImageProcessor.processData(image);
+        end
+        
+        function image = processData(image)
+                    
             % split the chanels
             [red, green, blue] = split(image);
 
-           
             % the points color range
             rRange = [170 180];
             gRange = [70 74];

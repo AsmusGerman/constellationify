@@ -1,0 +1,49 @@
+ant:
+<ant>
+  <mkdir dir="C:\Users\german\OneDrive\coding\constellationify\src\server\Constellationify\for_redistribution" />
+  <mkdir dir="C:\Users\german\OneDrive\coding\constellationify\src\server\Constellationify\for_testing" />
+</ant>
+mcc -W CTF:Constellationify -U -d C:\Users\german\OneDrive\coding\constellationify\src\server\Constellationify\for_testing -v C:\Users\german\OneDrive\coding\constellationify\src\server\@Constellationify\Constellationify.m 
+Warning: Unable to create personal MATLAB work folder:C:\Users\german\Documents\MATLAB
+[Warning: Userpath must be an absolute path and must exist on disk.] 
+Warning: Unable to create personal MATLAB work folder:C:\Users\german\Documents\MATLAB
+[Warning: Userpath must be an absolute path and must exist on disk.] 
+Warning: Unable to create personal MATLAB work folder:C:\Users\german\Documents\MATLAB
+Compiler version: 6.0 (R2015a)
+Dependency analysis by REQUIREMENTS.
+[Warning: Adding path
+"C:\Users\german\OneDrive\coding\constellationify\src\server\@Constellationify"
+to Compiler path instance.] 
+Parsing file "C:\Users\german\OneDrive\coding\constellationify\src\server\@Constellationify\Constellationify.m"
+	(Referenced from: "Compiler Command Line").
+[Warning: Method directories not allowed in MATLAB path:
+C:\Users\german\OneDrive\coding\constellationify\src\server\@Constellationify] 
+[> In path (line 109)
+  In matlab.depfun.internal.getSig (line 43)] 
+Deleting 23 temporary MEX authorization files.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e431182_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e424844_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e41933_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e419786_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e49859_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e422775_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e43825_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e411764_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e421324_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e419599_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e45009_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e46679_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e422548_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e415585_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e414298_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e431169_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e420165_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e49731_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e427158_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e46756_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e417942_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e413981_2532.auth'.
+Removing: 'C:\Users\german\AppData\Local\Temp\mathworks_tmp_009e419937_2532.auth'.
+Generating file "C:\Users\german\OneDrive\coding\constellationify\src\server\Constellationify\for_testing\readme.txt".
+com.mathworks.toolbox.compiler.plugin.DeployableArchivePackageCommand@302579ad
+Elapsed packaging time was: 10 minutes and 8 seconds.

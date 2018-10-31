@@ -1,62 +1,21 @@
 classdef Constellationify
     
-    properties(Constant)
-        set = './assets/images/';
-        extension = 'png';
-    end
+    methods(Static)       
+        
+        function output = query(image)
+            nAngles = 18;
+            nProportions = 10;
 
-    methods(Static)
-        function constellations = init()
-            %read all the image names from the directory set
-            files = Constellationify.read(Constellationify.set, Constellationify.extension);
+            constellation = Constellation(image);
+            constellation.features =  ALR3.run(constellation, nAngles, nProportions);
 
-            constellations = Collection();
-
-            nFiles = length(files);
-            %create the constellations
-            for i = 1 : nFiles
-                % get the file name and full name
-                [name, url] = Constellationify.fileinfo(files(i).value);
-
-                constellation = Constellation(url, name);
-                constellations = constellations.add(constellation);
-            end
-
-            constellations = [constellations.value];
-            %save the constellations to an isolated file
-            Constellationify.save('constellations', constellations);
-        end
-
-        function files = read(directory, extension)
-            files = Collection();
-            
-            reads = ls(strcat(directory,'/*.',extension));
-            reads = cellstr(reads);
-            nReads = length(reads);
-
-            for i = 1 : nReads
-                files = files.add(reads(i));
+            % load the constellations from the 'results' folder
+            targets = main(nAngles, nProportions);
+            nTargets = length(targets);
+            for i = 1 : nTargets
+               output(i) = constellation.compare(targets(i));
             end
         end
-
-        function save(name, data)
-            name = strcat(name,'.mat');
-            save(name,'data');
-        end
-
-        function data = import(name)
-            name = strcat(name,'.mat');
-            data = importdata(name);
-        end
-
-        function [name, url] = fileinfo(file)
-            name = strsplit(char(file),'.');
-            name = name(1); %file name without extension
-
-            url = strcat(Constellationify.set, file); %full name
-        end
-
-        constellations = runALR3(instance, constellations, nAngles, nProportions)
     end
 end
 
