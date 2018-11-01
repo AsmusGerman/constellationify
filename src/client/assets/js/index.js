@@ -32,29 +32,12 @@ restart.addEventListener('click', function () {
     context.clearRect(0, 0, canvas.width, canvas.height);
 });
 
-var download = document.getElementById("download");
+var download = document.getElementById("query");
 download.addEventListener('click', function () {
     var image = canvas.toDataURL("image/png;base64;");
-    var link = document.createElement('a');
+    /* var link = document.createElement('a');
     link.download = "my-image.png";
     link.href = image;
-    link.click();
-});
-
-var modal = document.getElementById("modal");
-var help = document.getElementById("help");
-var close = document.getElementById("close");
-
-help.addEventListener('click', function () {
-    modal.style.display = "flex";
-});
-
-close.addEventListener('click', function () {
-    modal.style.display = "none";
-});
-
-window.addEventListener('click', function () {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
+    link.click(); */
+    var matlab_url ="matlab:Constellationify.query("+image+")";
 });

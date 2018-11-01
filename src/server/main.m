@@ -8,7 +8,10 @@ function constellations = main(nAngles, nProportions)
         constellations_file = 'results/constellations';
         %if file doesn't exists, run initial process and save the file
         if(exist(strcat(constellations_file,'.mat')) ~= 2)
-            Constellationify.init();
+            constellations = initialize();
+            
+            %save the constellations to an isolated file
+            MatFileController.save(constellations_file, constellations);
         end
 
         %import the file
@@ -24,7 +27,7 @@ end
 
 function constellations = initialize()
     %read all the image names from the directory set
-    files = MatFileController.read('./assets/images/', 'png');
+    files = ImageProcessor.read('./assets/images/', 'png');
 
     constellations = Collection();
 
@@ -33,15 +36,14 @@ function constellations = initialize()
     for i = 1 : nFiles
         % get the file name and full name
         name = ImageProcessor.getName(files(i).value);
-        url = ImageProcessor.getFullName(files(i).value);
+        url = ImageProcessor.getFullName('./assets/images/', files(i).value);
 
-        constellation = Constellation(url, name);
+        % build the constellation and process image for noice reduction
+        constellation = ConstellationBuilder.build(url, name, true);
         constellations = constellations.add(constellation);
     end
 
     constellations = [constellations.value];
-    %save the constellations to an isolated file
-    MatFileController.save('constellations', constellations);
 end
 
 function constellations = ALR3(constellations, nAngles, nProportions)

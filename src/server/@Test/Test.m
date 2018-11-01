@@ -2,6 +2,8 @@ classdef Test
     methods(Static)
         %test for 18 angle ranges and 10 proportion ranges
         output = A18P10()
+        
+        [output, constellation] = query_test(image, process)
 
         function output = compare(constellation, targets)
             nTargets = length(targets);

@@ -3,7 +3,7 @@ classdef StarFinder
         function stars = process(constellation, radius)
             stars = Collection();
 
-            [centers, radii, ~] = imfindcircles(constellation.image, [1 radius]);
+            [centers, radii, ~] = imfindcircles(constellation.image, [1 radius],'ObjectPolarity','dark');
             nCenters = length(centers);
 
             for i = 1 : nCenters

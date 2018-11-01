@@ -2,11 +2,11 @@ classdef Constellationify
     
     methods(Static)       
         
-        function output = query(image)
+        function output = query(url)
             nAngles = 18;
             nProportions = 10;
 
-            constellation = Constellation(image);
+            constellation = ConstellationBuilder.build(url,'')
             constellation.features =  ALR3.run(constellation, nAngles, nProportions);
 
             % load the constellations from the 'results' folder

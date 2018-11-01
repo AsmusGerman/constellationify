@@ -1,4 +1,5 @@
 classdef ImageProcessor
+
     methods(Static)
         
        function name = getName(file)
@@ -6,18 +7,32 @@ classdef ImageProcessor
             name = name(1); %file name without extension
         end
 
-        function url = getFullName(file)
-            url = strcat(Constellationify.set, file); %full name
+        function url = getFullName(directory, file)
+            url = strcat(directory, file); %full name
+        end
+
+        function files = read(directory, extension)
+            files = Collection();
+            
+            reads = ls(strcat(directory,'/*.',extension));
+            reads = cellstr(reads);
+            nReads = length(reads);
+
+            for i = 1 : nReads
+                files = files.add(reads(i));
+            end
+        end
+
+        function image = truecolor(image)
+            %if is not a truecolor image
+            if  size(image, 3) < 3
+                %convert to truecolor
+                image = demosaic(image,'bggr');
+            end
         end
 
         function image = process(image)
-            %read the file by its full name
-            image = imread(char(image));
-            image = ImageProcessor.processData(image);
-        end
-        
-        function image = processData(image)
-                    
+
             % split the chanels
             [red, green, blue] = split(image);
 
@@ -40,7 +55,9 @@ classdef ImageProcessor
 
             % merge the chanels
             image = cat(3, red, green, blue);
-            image = sharp(image);            
+            image = sharp(image);
+
+            image = im2bw(image);
         end
     end
 end
@@ -66,8 +83,4 @@ function image = sharp(image)
     % see: http://www.mathworks.com/help/images/noise-removal.html
     image = imnoise(image, 'salt & pepper', 0.02);
     image = medfilt2(image);
-    
-    %color to bw
-    image = im2bw(image);
-    image = imcomplement(image);
 end
