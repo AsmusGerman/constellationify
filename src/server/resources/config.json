@@ -1,0 +1,17 @@
+{
+  "assets": {
+    "images": {
+      "directory": "assets/images",
+      "extension": "png"
+    }
+  },
+  "algorithm": {
+    "name": "alr3",
+    "params": {
+      "angles": 10,
+      "proportions": 10
+    }
+  },
+  "constellations": "results/constellations",
+  "output": "results/alr3"
+}

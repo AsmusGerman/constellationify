@@ -1,0 +1,5 @@
+{
+  "errors": {
+    "A1": { "message": "constellations dataset does not exists", "id": "A1" }
+  }
+}
