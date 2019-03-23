@@ -1,17 +1,28 @@
 {
   "assets": {
     "images": {
-      "directory": "assets/images",
+      "directory": "resources/images",
       "extension": "png"
     }
   },
   "algorithm": {
-    "name": "alr3",
+    "name": "ALR3AllAgainstAll",
     "params": {
       "angles": 10,
       "proportions": 10
     }
   },
+  "processes": {
+    "ImageProcessor": {
+      "rRange": [170, 180],
+      "bRange": [70, 74],
+      "gRange": [15, 20]
+    },
+    "FindCircles": {
+      "maxRadius": 50
+    }
+  },
   "constellations": "results/constellations",
-  "output": "results/alr3"
+  "output": "results/alr3",
+  "octave": true
 }
