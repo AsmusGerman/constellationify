@@ -1,8 +1,4 @@
-classdef Constellation < handle
-    properties (Access = private)
-        application
-    end
-
+classdef Constellation < Scoped
     properties
         image;
         stars;
@@ -14,22 +10,18 @@ classdef Constellation < handle
         % constructor
         % creates a new constellation intance
         % by passing the file as argument
-        function instance = Constellation(application, file)
+        function instance = Constellation(file)
             if  nargin > 0
-                instance.application = application;
                 instance.file = file;
                 instance.image = instance.ImageProcess();
                 instance.stars = instance.FindCircles();
             end
         end
 
-        function distance = GetDistanceFrom(constellation)
-            distance = norm(features - constellation.features);
-        end
-
         function value = filename(instance)
             value = strcat(instance.file.folder, '\', instance.file.name);
         end
+        
         function value = centroid(instance)
             value = mean(instance.stars.center);
         end
@@ -46,27 +38,11 @@ classdef Constellation < handle
                 %centroid to second
                 OB = instance.stars(second).center - third;
         end
-
-        function obj = toStruct(instance)
-            obj.image = instance.image;
-            obj.stars = instance.stars;
-            obj.features = instance.features;
-            obj.file = instance.file;
-        end
-    end
-
-    methods (Static)
-        function instance = import(obj)
-            instance.image = obj.image;
-            instance.stars = obj.stars;
-            instance.features = obj.features;
-            instance.file = obj.file;
-        end
     end
 
     methods (Access = private)
         function image = ImageProcess(instance)
-            configuration = instance.application.configuration.processes.ImageProcessor;
+            configuration = Constellation.scope.configuration.processes.ImageProcessor;
             image = imread(char(instance.filename));
             image = ImageTools.truecolor(image);
 
@@ -75,9 +51,6 @@ classdef Constellation < handle
 
             % get the mask
             % the points color range
-            %rRange = [170 180];
-            %gRange = [70 74];
-            %bRange = [15 20];
             mRed = ImageTools.ranged(red, configuration.rRange);
             mGreen = ImageTools.ranged(green, configuration.gRange);
             mBlue = ImageTools.ranged(blue, configuration.bRange);
@@ -91,17 +64,19 @@ classdef Constellation < handle
 
             % merge the chanels
             image = cat(3, red, green, blue);
-            image = ImageTools.sharp(image);
+            %image = ImageTools.sharp(image);
             image = im2bw(image);
         end
         
         function stars = FindCircles(instance)
             %max radius = 50
-            radius = instance.application.configuration.processes.FindCircles.maxRadius;
+            radius = Constellation.scope.configuration.processes.FindCircles.maxRadius;
             [centers, radii, ~] = imfindcircles(instance.image, [1 radius],'ObjectPolarity','dark');
             nCenters = length(centers);
             for index = 1 : nCenters
-                stars(index) = Star(centers(index), radii(index));
+                star.center = centers(index);
+                star.radius = radii(index);
+                stars(index) = Tools.struct2class('Star', star);
             end
         end
     end

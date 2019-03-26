@@ -1,31 +1,50 @@
-classdef ConstellationController
-    properties (Access=private)
-        application
-    end
-    methods (Access = public)
-
-        function instance = ConstellationController(application)
-            instance.application = application;
-        end
-
-        function constellations = load(instance)
+classdef ConstellationController < Scoped
+    methods (Static, Access = public)
+        function [constellations, imported] = load()
+            imported = true;
+            constellations = [];
             try
                 Logger.info('Importing constellations');
-                constellations = instance.import();
-                Logger.success('Import succeed');
-            catch exception
-                Logger.warning(['Import failed. Inner exception: ', exception.message]);
-                
-                Logger.info('Reconstructing constellations');
-                constellations = instance.construct();
-                Logger.success('reconstruction succeed'),
-                %saves the constellations to an isolated file
-                for index = 1:length(constellations)
-                    data(index) = constellations(index);
+                constellations = ConstellationController.import();
+                if(isempty(constellations))
+                    Logger.info('Reconstructing constellations');
+                    constellations = ConstellationController.reconstruct();
+                    imported = false;
                 end
-                Logger.info('Saving reconstructed constellations');
-                FileTools.save(instance.application.configuration.constellations, data);
+            catch exception
+                Logger.error(['Load failed. Inner exception: ', exception.message]);
+            end               
+        end
+
+        function output = process(constellations)
+            try
+                algorithm = DynamicLoader.resolve(Constellation.scope.configuration.algorithm.name);
+                nConstellations = length(constellations);
+                Logger.info('... processing');
+                for index = 1 : nConstellations
+                    PresentationTools.loader(index, nConstellations);
+
+                    constellation = constellations(index);
+                    constellation = Tools.struct2class('Constellation', constellation);
+                    constellation.features = algorithm.execute(constellation, Constellation.scope.configuration.algorithm.params);
+                    output(index) = struct('name', constellation.file.name(1:end-4), 'features', constellation.features);
+                end
+                Logger.log('');
+                if(~isempty(output))
+                    Logger.info('Saving processed data');
+                    FileTools.save(Constellation.scope.configuration.constellations, output);
+                else
+                    Logger.warning('No data found, constellations features are empty...');
+                end
+            catch exception
+                Logger.error(['Process failed. Inner exception: ', exception.message]);
             end
+        end
+
+        function constellation = create(file)
+            constellation = Constellation(file);
+            algorithm = DynamicLoader.resolve(Constellation.scope.configuration.algorithm.name);
+            constellation.features = algorithm.execute(constellation, Constellation.scope.configuration.algorithm.params);
         end
 
         function show(constellation)
@@ -42,25 +61,32 @@ classdef ConstellationController
         end
     end
 
-    methods (Access = private)
+    methods (Static, Access = private)
     
-        function constellations = import(instance)
-            %checks if there is a seved file
-            if(exist(instance.application.configuration.constellations) ~= 2)
-                error(instance.application.messages.errors.A1.message, instance.application.messages.errors.A1.id)
-            else
-                %imports the file
-                constellations = FileTools.load(instance.application.configuration.constellations).data;
+        function constellations = import()
+            constellations = [];
+            try
+                constellations = FileTools.load(ConstellationController.scope.configuration.constellations);
+            catch exception
+                Logger.error(['Import failed. Inner exception: ', exception.message]);
             end
         end
 
-        function constellations = construct(instance)
-            %get all the file names from the images directory
-            images = instance.application.configuration.assets.images;
-            files = dir(strcat(images.directory,'/*.', images.extension));
-            nFiles = length(files);
-            for index = 1 : nFiles
-                constellations(index) = Constellation(instance.application, files(index));
+        function constellations = reconstruct()
+            try
+                %get all the file names from the images directory
+                images = ConstellationController.scope.configuration.assets.images;
+                Logger.info(['loading constellations images from: ', images.directory]);
+                files = dir(strcat(images.directory,'/*.', images.extension));
+                Logger.info(['... reconstructing ']);
+                nFiles = length(files);
+                for index = 1 : nFiles
+                    PresentationTools.loader(index, nFiles);
+                    constellations(index) = Constellation(files(index));
+                end
+                Logger.log('');
+            catch exception
+                Logger.error(['Reconstruct failed. Inner exception: ', exception.message]);   
             end
         end
     end

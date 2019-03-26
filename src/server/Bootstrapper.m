@@ -14,6 +14,7 @@ classdef Bootstrapper
 
             %loads vendor libraries
             addpath('vendors/jsonlab');
+            addpath('vendors/struct2table');
 
             %loads the messages
             application.messages = loadjson('messages.json');

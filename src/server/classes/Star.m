@@ -4,9 +4,7 @@ classdef Star
         radius;
     end
     methods
-        function instance = Star(center, radius)
-            instance.center = center;
-            instance.radius = radius;
+        function instance = Star()
         end
     end
 end

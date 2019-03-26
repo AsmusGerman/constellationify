@@ -13,7 +13,7 @@
             Logger.log(['#WARNING: ', message])
         end
         function log(message)
-            disp([char(10) message char(10)]);
+            disp([char(10) message]);
         end
     end
 end

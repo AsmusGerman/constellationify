@@ -22,7 +22,6 @@
       "maxRadius": 50
     }
   },
-  "constellations": "results/constellations",
-  "output": "results/alr3",
+  "constellations": "results/constellations.data",
   "octave": true
 }
