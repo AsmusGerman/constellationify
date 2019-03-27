@@ -1,27 +1,39 @@
 {
   "assets": {
-    "images": {
-      "directory": "resources/images",
-      "extension": "png"
+    "images": "resources/images/*.png"
+  },
+  "results": "results/",
+  "presentation": {
+    "enabled": true,
+    "animations": {
+      "signature": "signature"
     }
   },
-  "algorithm": {
-    "name": "ALR3AllAgainstAll",
-    "params": {
-      "angles": 10,
-      "proportions": 10
-    }
-  },
-  "processes": {
+  "processors": {
+    "images":"results/images/",
     "ImageProcessor": {
-      "rRange": [170, 180],
-      "bRange": [70, 74],
-      "gRange": [15, 20]
+      "params": {
+        "rRange": [160, 190],
+        "bRange": [60, 70],
+        "gRange": [10, 15]
+      }
     },
-    "FindCircles": {
-      "maxRadius": 50
+    "ShapeProcessor": {
+      "params": {
+        "maxRadius": 50
+      }
+    },
+    "FeatureProcessor": {
+      "params": {
+        "algorithm": {
+          "name": "ALR3AllAgainstAll",
+          "params": {
+            "angles": 10,
+            "proportions": 10
+          }
+        }
+      }
     }
   },
-  "constellations": "results/constellations.data",
   "octave": true
 }

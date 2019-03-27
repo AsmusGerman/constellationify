@@ -1,38 +1,66 @@
 classdef Controller < Scoped
     methods (Static, Access = public)
-        function [constellations, imported] = import()
-            imported = true;
-            constellations = [];
+        function constellations = import()
             try
+                constellations = [];
                 Logger.info('Importing constellations');
-                constellations = Controller.load();
-                if(isempty(constellations))
-                    Logger.info('Reconstructing constellations');
-                    constellations = Controller.reconstruct();
-                    imported = false;
-                end
+                constellations =  FileTools.import([Scoped.scope.configuration.results, Scoped.scope.configuration.processors.FeatureProcessor.params.algorithm.name, '.data']).data;
             catch exception
                 Logger.error(['Import failed. Inner exception: ', exception.message]);
             end               
         end
 
-        function output = process(constellations)
+        function constellations = reconstruct()
             try
-                algorithm = DynamicLoader.resolve(Controller.scope.configuration.algorithm.name);
-                nConstellations = length(constellations);
-                Logger.info('... processing');
-                for index = 1 : nConstellations
-                    PresentationTools.loader(index, nConstellations);
-
-                    constellation = constellations(index);
-                    constellation = Tools.struct2class('Constellation', constellation);
-                    constellation.features = algorithm.execute(constellation, Controller.scope.configuration.algorithm.params);
-                    output(index) = struct('name', constellation.file.name(1:end-4), 'features', constellation.features);
+                Logger.info('Reconstructing constellations');
+                Logger.info('loading constellations dataset');
+                
+                %get images form assets/images directory
+                Logger.info(['... reconstructing ']);
+                files = dir(Scoped.scope.configuration.assets.images);
+                nFiles = length(files);
+                for index = 1 : nFiles
+                    PresentationTools.loader(index, nFiles);
+                    constellations(index) = Constellation(files(index));
                 end
                 Logger.log('');
+            catch exception
+                Logger.error(['Reconstruct failed. Inner exception: ', exception.message]);   
+            end
+        end
+
+        function output = process(constellations)
+            try
+                processors = Scoped.scope.configuration.processors;
+                nConstellations = length(constellations);
+                Logger.info('... processing images and shapes');
+                for index = 1:nConstellations
+                    PresentationTools.loader(index, nConstellations);
+                    constellations(index).image = ImageProcessor.execute(constellations(index).image, processors.ImageProcessor.params);
+                    
+                    shape = ShapeProcessor.execute(constellations(index).image, processors.ShapeProcessor.params);
+                    constellations(index).stars = Tools.struct2class('Star', shape);
+
+                    data(index).name = constellations(index).name;
+                    data(index).stars = constellations(index).stars.center;
+                end
+                Logger.log('');
+
+                if(~isempty(data))
+                    Logger.info('Saving processed images and shapes data');
+                    if(~exist(Scoped.scope.configuration.processors.images))
+                        for index = 1:nConstellations
+                            imwrite(constellations(index).image, [Scoped.scope.configuration.processors.images, data(index).name, '.png'])
+                        end
+                    end
+                    FileTools.export('results/reconstruction.data', data);
+                end
+
+                output = FeatureProcessor.execute(constellations, processors.FeatureProcessor.params);
+
                 if(~isempty(output))
-                    Logger.info('Saving processed data');
-                    FileTools.save(Controller.scope.configuration.constellations, output);
+                    Logger.info('Saving features');
+                    FileTools.export([Scoped.scope.configuration.results, processors.FeatureProcessor.params.algorithm.name, '.data'], output);
                 else
                     Logger.warning('No data found, constellations features are empty...');
                 end
@@ -43,51 +71,16 @@ classdef Controller < Scoped
 
         function constellation = create(file)
             constellation = Constellation(file);
-            algorithm = DynamicLoader.resolve(Controller.scope.configuration.algorithm.name);
-            constellation.features = algorithm.execute(constellation, Controller.scope.configuration.algorithm.params);
-        end
 
-        function show(constellation)
-            imshow(image);
-    
-            %get every star center
-            [centers, radius] = centers();
+            processors = Scoped.scope.configuration.processors;
+            constellation.image = ImageProcessor.execute(constellation.image, processors.ImageProcessor.params);
+            imshow(constellation.image)
+            shape = ShapeProcessor.execute(constellation.image, processors.ShapeProcessor.params);
+            constellation.stars = Tools.struct2class('Star', shape);
 
-            %every star with each radius
-            viscircles(centers, radius,'EdgeColor','b');
-
-            %centroid with radius = 2
-            viscircles(centroid, 2,'EdgeColor','r');
-        end
-    end
-
-    methods (Static, Access = private)
-    
-        function constellations = load()
-            constellations = [];
-            try
-                constellations = FileTools.load(Controller.scope.configuration.constellations);
-            catch exception
-                Logger.error(['Load failed. Inner exception: ', exception.message]);
-            end
-        end
-
-        function constellations = reconstruct()
-            try
-                %get all the file names from the images directory
-                images = Controller.scope.configuration.assets.images;
-                Logger.info(['loading constellations images from: ', images.directory]);
-                files = dir(strcat(images.directory,'/*.', images.extension));
-                Logger.info(['... reconstructing ']);
-                nFiles = length(files);
-                for index = 1 : nFiles
-                    PresentationTools.loader(index, nFiles);
-                    constellations(index) = Constellation(files(index));
-                end
-                Logger.log('');
-            catch exception
-                Logger.error(['Reconstruct failed. Inner exception: ', exception.message]);   
-            end
+            processor = Scoped.scope.configuration.processors.FeatureProcessor;
+            data = FeatureProcessor.execute(constellation, processor.params)
+            constellation.features = data.features;
         end
     end
 end

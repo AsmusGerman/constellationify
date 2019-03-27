@@ -1,3 +1,4 @@
 .vscode/
 **/results/
 **/images/
+src/server/resources/test/

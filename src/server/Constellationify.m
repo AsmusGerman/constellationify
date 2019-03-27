@@ -1,30 +1,40 @@
-function output = Constellationify(constellation)
-    context = boot();
-    output = Application.start(context);
-    if nargin == 1
-        constellations = output.(Application.scope.configuration.algorithm.name);
-        Application.compare(constellation, constellations);
+classdef Constellationify
+    methods (Access = public)
+        function  output = Constellationify(constellation)
+            context = Constellationify.boot();
+            output = Application.start(context);
+            if nargin == 1
+                output = Application.compare(constellation, output);
+            end
+        end
     end
-end
 
-function context = boot()
-    clc; clear;
-    warning('off','all');
+    methods (Static, Access = private)
+        function context = boot()
+            clc; clear;
+            warning('off','all');
 
-    %loads project dirs
-    addpath('./algorithms/')
-    addpath('./classes/');
-    addpath('./tools/');
-    addpath('./resources/');
+            %loads project directories (use '/' at the end)
+            Constellationify.addSubFolders('./');
+            Constellationify.addSubFolders('vendors/');
 
-    %loads vendor libraries
-    addpath('vendors/jsonlab');
-    addpath('vendors/struct2table');
+            context.configuration = loadjson('config.json');
+            context.messages = loadjson('messages.json');
 
-    context.configuration = loadjson('config.json');
-    context.messages = loadjson('messages.json');
-
-    if(context.configuration.octave)
-        pkg load image;
+            if(context.configuration.octave)
+                pkg load image;
+            end
+        end
+        
+        function addSubFolders(directory)
+            %search for dirs but ./ ../
+            dirs = dir([directory, '*']);
+            dirs = dirs([dirs.isdir] > 0);
+            for index = 1:length(dirs)
+                folder = [directory, dirs(index).name];
+                disp(['loading: ', folder]);
+                addpath(folder);
+            end
+        end
     end
 end

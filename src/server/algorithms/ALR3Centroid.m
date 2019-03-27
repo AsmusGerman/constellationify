@@ -1,21 +1,21 @@
-classdef ALR3
-
+classdef ALR3Centroid
     methods(Static)
-        function features = execute(constellation, nAngles, nProportions)
+        function features = execute(constellation, params)
             nStars = length(constellation.stars);
-            
-            histogram = zeros(nAngles, nProportions);
-            angles = [0:180/nAngles:180];
+        
+            histogram = zeros(params.angles, params.proportions);
+            angles = [0:180/params.angles:180];
             angles(end) = [];
 
-            proportions = [0:1/nProportions:1];
+            proportions = [0:1/params.proportions:1];
             proportions(end) = [];
+
 
             for i = 1 : nStars
                 for j = 1 : nStars
                     if i ~= j
                         %non normalized vectors
-                        [OA, OB] = constellation.edges(i, j);
+                        [OA, OB] = ALR3Centroid.edges(i, j);
                         
                         nOA = norm(OA);
                         nOB = norm(OB);
@@ -48,6 +48,20 @@ classdef ALR3
             if(features_norm > 0)
                 features = features/features_norm;
             end
+        end
+    end
+
+    methods (Static, Access = private)
+        function value = centroid(constellation)
+            value = mean(constellation.stars.center);
+        end
+
+        function [OA, OB] = edges(constellation, first, second)
+            centroid = ALR3Centroid.centroid(constellation);
+            %centroid to first
+            OA = constellation.stars(first).center - centroid;
+            %centroid to second
+            OB = constellation.stars(second).center - centroid;
         end
     end
 end

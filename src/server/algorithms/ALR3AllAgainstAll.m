@@ -21,7 +21,7 @@ classdef ALR3AllAgainstAll
                                 table = [table; [centroid, j, k]];
 
                                 %non normalized vectors
-                                [OA, OB] = constellation.edgesFrom(j, k, centroid);
+                                [OA, OB] = constellation.edges(j, k, centroid);
                             
                             nOA = norm(OA);
                             nOB = norm(OB);
@@ -57,5 +57,13 @@ classdef ALR3AllAgainstAll
                 features = features/features_norm;
             end
         end
-    end 
+    end
+    methods (Static, Access = private)
+        function [OA, OB] = edges(constellation, first, second, centroid)
+            %centroid to first
+            OA = constellation.stars(first).center - centroid;
+            %centroid to second
+            OB = constellation.stars(second).center - centroid;
+        end
+    end
 end
