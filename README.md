@@ -9,6 +9,8 @@ Constellationify is an academic project that was born with solid foundations in 
 
 ```bash
 
+cd src/server
+
 octave --no-gui
 
 octave:1> andromeda = dir('…\assets\images\andromeda.png'); %use full path
