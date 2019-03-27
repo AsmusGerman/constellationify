@@ -1,48 +1,30 @@
-classdef Constellationify < Scoped
-    properties
-        data;
+function output = Constellationify(constellation)
+    context = boot();
+    output = Application.start(context);
+    if nargin == 1
+        constellations = output.(Application.scope.configuration.algorithm.name);
+        Application.compare(constellation, constellations);
     end
-    methods (Access = private)
-        function instance = Constellationify()
-            Constellationify.scope(Bootstrapper.boot());
-            
-            PresentationTools.present();
+end
 
-            [constellations, imported] = ConstellationController.load();
+function context = boot()
+    clc; clear;
+    warning('off','all');
 
-            if ~imported
-               constellations = ConstellationController.process(constellations);
-            end
+    %loads project dirs
+    addpath('./algorithms/')
+    addpath('./classes/');
+    addpath('./tools/');
+    addpath('./resources/');
 
-            instance.data.(Constellationify.scope.configuration.algorithm.name) = constellations;
+    %loads vendor libraries
+    addpath('vendors/jsonlab');
+    addpath('vendors/struct2table');
 
-            Logger.success('Done!')
-        end
-    end
+    context.configuration = loadjson('config.json');
+    context.messages = loadjson('messages.json');
 
-    methods (Static)
-        function instance = instance()
-            persistent singleton
-            if isempty(singleton)
-                singleton = Constellationify();
-            end
-            instance = singleton;            
-        end
-    end
-
-    methods (Access = public)
-        function output = compare(instance, file)
-            %create the new constellation
-            target = ConstellationController.create(file);
-
-            % load the constellations from the 'results' folder
-            constellations = instance.data.(Constellationify.scope.configuration.algorithm.name);
-            nConstellations = length(constellations);
-            for index = 1 : nConstellations
-                constellation = constellations(index);
-                output(index) = struct('name', constellation.name, 'distance', norm(constellation.features - target.features));
-            end
-            struct2table(output);
-        end
+    if(context.configuration.octave)
+        pkg load image;
     end
 end

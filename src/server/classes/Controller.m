@@ -1,24 +1,24 @@
-classdef ConstellationController < Scoped
+classdef Controller < Scoped
     methods (Static, Access = public)
-        function [constellations, imported] = load()
+        function [constellations, imported] = import()
             imported = true;
             constellations = [];
             try
                 Logger.info('Importing constellations');
-                constellations = ConstellationController.import();
+                constellations = Controller.load();
                 if(isempty(constellations))
                     Logger.info('Reconstructing constellations');
-                    constellations = ConstellationController.reconstruct();
+                    constellations = Controller.reconstruct();
                     imported = false;
                 end
             catch exception
-                Logger.error(['Load failed. Inner exception: ', exception.message]);
+                Logger.error(['Import failed. Inner exception: ', exception.message]);
             end               
         end
 
         function output = process(constellations)
             try
-                algorithm = DynamicLoader.resolve(Constellation.scope.configuration.algorithm.name);
+                algorithm = DynamicLoader.resolve(Controller.scope.configuration.algorithm.name);
                 nConstellations = length(constellations);
                 Logger.info('... processing');
                 for index = 1 : nConstellations
@@ -26,13 +26,13 @@ classdef ConstellationController < Scoped
 
                     constellation = constellations(index);
                     constellation = Tools.struct2class('Constellation', constellation);
-                    constellation.features = algorithm.execute(constellation, Constellation.scope.configuration.algorithm.params);
+                    constellation.features = algorithm.execute(constellation, Controller.scope.configuration.algorithm.params);
                     output(index) = struct('name', constellation.file.name(1:end-4), 'features', constellation.features);
                 end
                 Logger.log('');
                 if(~isempty(output))
                     Logger.info('Saving processed data');
-                    FileTools.save(Constellation.scope.configuration.constellations, output);
+                    FileTools.save(Controller.scope.configuration.constellations, output);
                 else
                     Logger.warning('No data found, constellations features are empty...');
                 end
@@ -43,8 +43,8 @@ classdef ConstellationController < Scoped
 
         function constellation = create(file)
             constellation = Constellation(file);
-            algorithm = DynamicLoader.resolve(Constellation.scope.configuration.algorithm.name);
-            constellation.features = algorithm.execute(constellation, Constellation.scope.configuration.algorithm.params);
+            algorithm = DynamicLoader.resolve(Controller.scope.configuration.algorithm.name);
+            constellation.features = algorithm.execute(constellation, Controller.scope.configuration.algorithm.params);
         end
 
         function show(constellation)
@@ -63,19 +63,19 @@ classdef ConstellationController < Scoped
 
     methods (Static, Access = private)
     
-        function constellations = import()
+        function constellations = load()
             constellations = [];
             try
-                constellations = FileTools.load(ConstellationController.scope.configuration.constellations);
+                constellations = FileTools.load(Controller.scope.configuration.constellations);
             catch exception
-                Logger.error(['Import failed. Inner exception: ', exception.message]);
+                Logger.error(['Load failed. Inner exception: ', exception.message]);
             end
         end
 
         function constellations = reconstruct()
             try
                 %get all the file names from the images directory
-                images = ConstellationController.scope.configuration.assets.images;
+                images = Controller.scope.configuration.assets.images;
                 Logger.info(['loading constellations images from: ', images.directory]);
                 files = dir(strcat(images.directory,'/*.', images.extension));
                 Logger.info(['... reconstructing ']);

@@ -1,11 +1,8 @@
 # Constellationify
-Constellationify is a project code based on Matlab/Octave using OOP paradigm to obtain a descriptive set of characteristics for each constellation of the celestial sphere and facilitate comparison with other graphic representations.
+Constellationify is a project code based on Matlab/Octave using OOP paradigm to obtain a descriptive set of characteristics for each one of the 88 constellations and facilitate comparison with other graphic representations of them or similar.
 
 # Motivation
-TODO
-
-# Features
-TODO
+Constellationify is an academic project that was born with solid foundations in the OOP paradigm and modern programming concepts, using the power of Matlab / Octave for image processing and [ALR3](https://www.researchgate.net/publication/328049660_Zernike_Moments_vs_ALR3_Applied_to_Similarity_Searching_of_Cattle_Brands) algorithm to obtain the characteristics that represent each image.
 
 # Example
 ## Octave
@@ -14,14 +11,12 @@ TODO
 
 octave --no-gui
 
-octave:1> instance = Constellationify.instance();
-octave:2> andromeda = dir('…\assets\images\andromeda.png'); %use full path
-octave:3> Constellationify.compare(andromeda);
+octave:1> andromeda = dir('…\assets\images\andromeda.png'); %use full path
+octave:2> Constellationify(andromeda);
+
 ```
-#Matlab
-TODO
 
 # Installation
-TODO
-1. Download the [constellation_dataset](https://github.com/AsmusGerman/constellationify/wiki/Constellation-Dataset)
+
+1. Download the [constellation-dataset.zip](https://github.com/AsmusGerman/constellationify/files/3009880/constellation-dataset.zip)
 2. Unzip into 'assets/images/'

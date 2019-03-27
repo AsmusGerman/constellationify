@@ -28,7 +28,9 @@ classdef ImageTools
                         
             % noise removal
             % see: http://www.mathworks.com/help/images/noise-removal.html
-            image = imnoise(image, 'salt & pepper', 0.02);
+
+            saltpepper = load("resources/saltpepper.data").saltpepper;
+            image = [image saltpepper];
             image = medfilt2(image);
         end         
     end

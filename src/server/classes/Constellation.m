@@ -38,6 +38,16 @@ classdef Constellation < Scoped
                 %centroid to second
                 OB = instance.stars(second).center - third;
         end
+
+        function object = distance(instance, constellation)
+            object.name = constellation.name;
+            object.distance = norm(constellation.features - instance.features);
+            
+%{
+ object = struct('name', name, 'distance', distance); 
+%}
+
+        end
     end
 
     methods (Access = private)
@@ -64,7 +74,7 @@ classdef Constellation < Scoped
 
             % merge the chanels
             image = cat(3, red, green, blue);
-            %image = ImageTools.sharp(image);
+            image = ImageTools.sharp(image);
             image = im2bw(image);
         end
         
