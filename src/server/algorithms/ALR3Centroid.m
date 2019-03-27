@@ -15,7 +15,7 @@ classdef ALR3Centroid
                 for j = 1 : nStars
                     if i ~= j
                         %non normalized vectors
-                        [OA, OB] = ALR3Centroid.edges(i, j);
+                        [OA, OB] = ALR3Centroid.edges(constellation, i, j);
                         
                         nOA = norm(OA);
                         nOB = norm(OB);

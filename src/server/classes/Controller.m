@@ -38,8 +38,7 @@ classdef Controller < Scoped
                     PresentationTools.loader(index, nConstellations);
                     constellations(index).image = ImageProcessor.execute(constellations(index).image, processors.ImageProcessor.params);
                     
-                    shape = ShapeProcessor.execute(constellations(index).image, processors.ShapeProcessor.params);
-                    constellations(index).stars = Tools.struct2class('Star', shape);
+                    constellations(index).stars = ShapeProcessor.execute(constellations(index).image, processors.ShapeProcessor.params);
 
                     data(index).name = constellations(index).name;
                     data(index).stars = constellations(index).stars.center;
@@ -74,9 +73,7 @@ classdef Controller < Scoped
 
             processors = Scoped.scope.configuration.processors;
             constellation.image = ImageProcessor.execute(constellation.image, processors.ImageProcessor.params);
-            imshow(constellation.image)
-            shape = ShapeProcessor.execute(constellation.image, processors.ShapeProcessor.params);
-            constellation.stars = Tools.struct2class('Star', shape);
+            constellation.stars = ShapeProcessor.execute(constellation.image, processors.ShapeProcessor.params);
 
             processor = Scoped.scope.configuration.processors.FeatureProcessor;
             data = FeatureProcessor.execute(constellation, processor.params)

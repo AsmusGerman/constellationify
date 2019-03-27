@@ -1,6 +1,6 @@
 classdef ShapeProcessor
     methods (Static, Access = public)
-        function shape = execute(image, params)
+        function shapes = execute(image, params)
             %max radius = 50
             radius = params.maxRadius;
             [centers, radii, ~] = imfindcircles(image, [1 radius],'ObjectPolarity','dark');
@@ -8,8 +8,8 @@ classdef ShapeProcessor
             for index = 1 : nCenters
                 shape.center = centers(index);
                 shape.radius = radii(index);
+                shapes(index) = Tools.struct2class('Star', shape);
             end
-            shape
         end
     end
 end

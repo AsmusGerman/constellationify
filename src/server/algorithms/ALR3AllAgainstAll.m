@@ -21,7 +21,7 @@ classdef ALR3AllAgainstAll
                                 table = [table; [centroid, j, k]];
 
                                 %non normalized vectors
-                                [OA, OB] = constellation.edges(j, k, centroid);
+                                [OA, OB] = ALR3AllAgainstAll.edges(constellation,j, k, centroid);
                             
                             nOA = norm(OA);
                             nOB = norm(OB);

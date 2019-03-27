@@ -14,7 +14,6 @@ classdef Constellation < Scoped
             if  nargin > 0
                 instance.file = file;
                 instance.image = imread(instance.filename);
-                instance.stars = [];
             end
         end
 
