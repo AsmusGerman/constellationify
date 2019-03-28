@@ -22,6 +22,17 @@ classdef Constellationify
             context.configuration = loadjson('config.json');
             context.messages = loadjson('messages.json');
 
+            if(exist('resources/images') ~= 2)
+                disp('unzipping resources');
+                unzip('resources.zip', 'resources/');
+            end
+
+            if(exist(context.configuration.results) ~= 2)
+                mkdir(context.configuration.results);
+                disp('unzipping results');
+                unzip('results.zip',context.configuration.results);
+            end
+            
             if(context.configuration.octave)
                 pkg load image;
             end
