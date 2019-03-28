@@ -9,6 +9,9 @@
       "signature": "signature"
     }
   },
+  "compare":{
+    "metric": "euclidean"
+  },
   "processors": {
     "images":"results/images/",
     "ImageProcessor": {

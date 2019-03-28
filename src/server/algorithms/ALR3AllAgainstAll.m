@@ -7,7 +7,7 @@ classdef ALR3AllAgainstAll
             angles = [0:180/params.angles:180];
             angles(end) = [];
 
-            proportions = [0:1/params.proportions:1];
+            proportions = [0:100/params.proportions:100];
             proportions(end) = [];
 
             table = [];
@@ -33,6 +33,8 @@ classdef ALR3AllAgainstAll
                             if proportion > 1
                                 proportion = 1/proportion;
                             end
+
+                            proportion = proportion * 100;
 
                             angleRangeInterval = find(angles <= angle);
                             %as the array is sorted, the maximum angle is the last one

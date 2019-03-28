@@ -33,28 +33,23 @@ classdef Controller < Scoped
             try
                 processors = Scoped.scope.configuration.processors;
                 nConstellations = length(constellations);
-                Logger.info('... processing images and shapes');
-                for index = 1:nConstellations
-                    PresentationTools.loader(index, nConstellations);
-                    constellations(index).image = ImageProcessor.execute(constellations(index).image, processors.ImageProcessor.params);
-                    
-                    constellations(index).stars = ShapeProcessor.execute(constellations(index).image, processors.ShapeProcessor.params);
-
-                    data(index).name = constellations(index).name;
-                    data(index).stars = constellations(index).stars.center;
+                %if processed images dosn't exist
+                if(exist(processors.images) == 0)
+                    Logger.info('... processing images and shapes');
+                    for index = 1:nConstellations
+                        PresentationTools.loader(index, nConstellations);
+                        constellations(index).image = ImageProcessor.execute(constellations(index).image, processors.ImageProcessor.params);
+                        constellations(index).stars = ShapeProcessor.execute(constellations(index).image, processors.ShapeProcessor.params);
+                    end
+                else
+                    Logger.info('... reading images and processing shapes');
+                    for index = 1:nConstellations
+                        PresentationTools.loader(index, nConstellations);
+                        constellations(index).image = imread([processors.images, constellations(index).name, '.png']);
+                        constellations(index).stars = ShapeProcessor.execute(constellations(index).image, processors.ShapeProcessor.params);
+                    end
                 end
                 Logger.log('');
-
-                if(~isempty(data))
-                    Logger.info('Saving processed images and shapes data');
-                    if(~exist(Scoped.scope.configuration.processors.images))
-                        for index = 1:nConstellations
-                            imwrite(constellations(index).image, [Scoped.scope.configuration.processors.images, data(index).name, '.png'])
-                        end
-                    end
-                    FileTools.export('results/reconstruction.data', data);
-                end
-
                 output = FeatureProcessor.execute(constellations, processors.FeatureProcessor.params);
 
                 if(~isempty(output))
@@ -76,7 +71,7 @@ classdef Controller < Scoped
             constellation.stars = ShapeProcessor.execute(constellation.image, processors.ShapeProcessor.params);
 
             processor = Scoped.scope.configuration.processors.FeatureProcessor;
-            data = FeatureProcessor.execute(constellation, processor.params)
+            data = FeatureProcessor.execute(constellation, processor.params);
             constellation.features = data.features;
         end
     end

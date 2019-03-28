@@ -4,7 +4,7 @@ classdef Constellationify
             context = Constellationify.boot();
             output = Application.start(context);
             if nargin == 1
-                output = Application.compare(constellation, output);
+                Application.compare(constellation, output);
             end
         end
     end
@@ -13,6 +13,7 @@ classdef Constellationify
         function context = boot()
             clc; clear;
             warning('off','all');
+            format long;
 
             %loads project directories (use '/' at the end)
             Constellationify.addSubFolders('./');

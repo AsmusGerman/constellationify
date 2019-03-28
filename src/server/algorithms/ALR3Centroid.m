@@ -7,7 +7,7 @@ classdef ALR3Centroid
             angles = [0:180/params.angles:180];
             angles(end) = [];
 
-            proportions = [0:1/params.proportions:1];
+            proportions = [0:100/params.proportions:100];
             proportions(end) = [];
 
 
@@ -20,6 +20,7 @@ classdef ALR3Centroid
                         nOA = norm(OA);
                         nOB = norm(OB);
 
+                        %angle = acos(min(1,max(-1, OA(:).' * OB(:) /nOA / nOB )))
                         angle = acosd(dot(OA,OB)/(nOA*nOB));
 
                         proportion = nOA/nOB;
@@ -28,8 +29,10 @@ classdef ALR3Centroid
                             proportion = 1/proportion;
                         end
 
+                        proportion = proportion * 100;
+
                         angleRangeInterval = find(angles <= angle);
-                        %as the array is sorted, the maximum angle is the last one
+                                                %as the array is sorted, the maximum angle is the last one
                         angleRangeInterval = max(angleRangeInterval);
 
                         proportionRangeInterval = find(proportions <= proportion);
@@ -53,7 +56,7 @@ classdef ALR3Centroid
 
     methods (Static, Access = private)
         function value = centroid(constellation)
-            value = mean(constellation.stars.center);
+            value = mean([constellation.stars(1:end).center]);
         end
 
         function [OA, OB] = edges(constellation, first, second)

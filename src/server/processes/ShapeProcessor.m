@@ -4,9 +4,9 @@ classdef ShapeProcessor
             %max radius = 50
             radius = params.maxRadius;
             [centers, radii, ~] = imfindcircles(image, [1 radius],'ObjectPolarity','dark');
-            nCenters = length(centers);
+            [nCenters, ~] = size(centers);
             for index = 1 : nCenters
-                shape.center = centers(index);
+                shape.center = centers(index, :);
                 shape.radius = radii(index);
                 shapes(index) = Tools.struct2class('Star', shape);
             end
