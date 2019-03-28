@@ -9,14 +9,11 @@ Constellationify is an academic project that was born with solid foundations in 
 
 ```bash
 
+cd src/server
+
 octave --no-gui
 
 octave:1> andromeda = dir('…\assets\images\andromeda.png'); %use full path
 octave:2> Constellationify(andromeda);
 
 ```
-
-# Installation
-
-1. Download the [constellation-dataset.zip](https://github.com/AsmusGerman/constellationify/files/3009880/constellation-dataset.zip)
-2. Unzip into 'assets/images/'
