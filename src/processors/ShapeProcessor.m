@@ -6,8 +6,8 @@ classdef ShapeProcessor
             [centers, radii, ~] = imfindcircles(image, [1 radius],'ObjectPolarity','dark');
             [nCenters, ~] = size(centers);
             for index = 1 : nCenters
-                shape.center = centers(index, :);
-                shape.radius = radii(index);
+                shape.x = centers(index, 1);
+                shape.y = centers(index, 2);
                 shapes(index) = Tools.struct2class('Star', shape);
             end
         end

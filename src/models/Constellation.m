@@ -1,28 +1,19 @@
 classdef Constellation < Scoped
     properties
-        image;
+        id;
+        name;
         stars;
         features;
-        file;
+        image;
     end
    
     methods (Access = public)
         % constructor
-        % creates a new constellation intance
-        % by passing the file as argument
         function instance = Constellation(file)
             if  nargin > 0
-                instance.file = file;
-                instance.image = imread(instance.filename);
+                instance.name = file.name(1:end-4);
+                instance.image = imread([file.folder,'\', instance.name,'.png']);
             end
-        end
-
-        function value = filename(instance)
-            value = strcat(instance.file.folder, '\', instance.file.name);
-        end
-
-        function value = name(instance)
-            value = instance.file.name(1:end-4);
         end
 
         function object = distance(instance, constellation)

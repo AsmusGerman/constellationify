@@ -1,0 +1,1 @@
+SELECT id, name, stars, features FROM constellation;

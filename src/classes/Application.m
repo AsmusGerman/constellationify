@@ -1,23 +1,26 @@
 classdef Application < Scoped
-    methods (Static, Access = public)
-        function output = start(context)
-            constellations = []
-            %set actual context as application scope
-            Application.scope(context);
-
-            PresentationTools.signature(Application.scope.configuration.presentation);
-
-            constellations = Controller.import();
-
-            if isempty(constellations)
-                constellations = Controller.reconstruct();
-                output = Controller.process(constellations);
-            end
-            
-            output = constellations;
-            Logger.success(context.messages.success.ready);
+    properties
+        controller;
+    end
+    methods (Access = public)
+        function instance = Application(context)
+            Scoped.scope(context);
+            PresentationTools.signature(Scoped.scope.configuration.presentation);   
+            instance.controller = Controller();
         end
 
+        function output = start(instance)
+            output = [];
+            output = instance.controller.import();
+
+            if isempty(output)
+                constellations = instance.controller.reconstruct();
+                instance.controller.process(constellations);
+                output = instance.controller.import();
+            end
+           
+            Logger.success(Scoped.scope.messages.success.ready);
+        end
         %{
             function view(constellation)
                 imshow(constellation.image);
@@ -30,18 +33,12 @@ classdef Application < Scoped
             end
         %}
 
-        function compare(file, constellations)
+        function compare(instance, path)
             try
                 %create the new constellation
-                params = Scoped.scope.configuration.processors.FeatureProcessor.params.algorithm.params;
-                target = Controller.create(file);
-                nConstellations = length(constellations);
-                for index = 1 : nConstellations
-                % X = reshape(target.features, params.angles, params.proportions);
-                    %Y = reshape(constellations(index).features, params.angles, params.proportions);
-                    output(index) = target.distance(constellations(index));
-                    %output(index).distance = pdist2(X, Y, Scoped.scope.configuration.compare.metric);
-                end 
+                file = dir(path);
+                constellation = instance.controller.create(file);
+                output = instance.controller.compare(constellation, 5);
 
                 cells = struct2cell(output); %converts struct to cell matrix
                 sortvals = cells(2,1,:); % gets the values of just the first field
@@ -51,8 +48,25 @@ classdef Application < Scoped
                 output = output(ix); %rearranges the original array
 
                 struct2table(output);
-            catch
-                Logger.error('oops');
+                
+%{
+ for index = 1 : nConstellations
+                    output(index) = target.distance(constellations(index));
+                end 
+ 
+
+                cells = struct2cell(output); %converts struct to cell matrix
+                sortvals = cells(2,1,:); % gets the values of just the first field
+                mat = cell2mat(sortvals); % converts values to a matrix
+                mat = squeeze(mat); %removes the empty dimensions for a single vector
+                [sorted,ix] = sort(mat); %sorts the vector of values
+                output = output(ix); %rearranges the original array
+
+                struct2table(output);
+%}
+
+            catch exception
+                Logger.error(['oops', exception.message]);
             end
         end
     end

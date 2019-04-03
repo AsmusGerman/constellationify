@@ -10,7 +10,6 @@ classdef ALR3Centroid
             proportions = [0:100/params.proportions:100];
             proportions(end) = [];
 
-
             for i = 1 : nStars
                 for j = 1 : nStars
                     if i ~= j
@@ -56,15 +55,16 @@ classdef ALR3Centroid
 
     methods (Static, Access = private)
         function value = centroid(constellation)
-            value = mean([constellation.stars(1:end).center]);
+            value.x = mean([constellation.stars(1:end).x]);
+            value.y = mean([constellation.stars(1:end).y]);
         end
 
         function [OA, OB] = edges(constellation, first, second)
             centroid = ALR3Centroid.centroid(constellation);
-            %centroid to first
-            OA = constellation.stars(first).center - centroid;
-            %centroid to second
-            OB = constellation.stars(second).center - centroid;
+             %centroid to first
+             OA = Star.vector(constellation.stars(first), centroid);
+             %centroid to second
+             OB = Star.vector(constellation.stars(second), centroid);
         end
     end
 end

@@ -1,11 +1,11 @@
 classdef (Abstract) Scoped < handle
     methods (Static)
-      function out = scope(data)
+      function output = scope(data)
          persistent scope;
          if nargin
             scope = data;
          end
-         out = scope;
+         output = scope;
       end
    end
 end

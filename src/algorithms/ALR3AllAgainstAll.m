@@ -63,9 +63,9 @@ classdef ALR3AllAgainstAll
     methods (Static, Access = private)
         function [OA, OB] = edges(constellation, first, second, centroid)
             %centroid to first
-            OA = constellation.stars(first).center - centroid;
+            OA = Star.vector(constellation.stars(first), centroid);
             %centroid to second
-            OB = constellation.stars(second).center - centroid;
+            OB = Star.vector(constellation.stars(second), centroid);
         end
     end
 end

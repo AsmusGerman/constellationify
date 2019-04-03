@@ -1,40 +1,49 @@
 classdef Constellationify
+    properties
+        application;
+    end
     methods (Access = public)
-        function  output = Constellationify(constellation)
+        function instance = Constellationify(path)
             context = Constellationify.boot();
-            output = Application.start(context);
+            instance.application = Application(context);
+            instance.application.start();
             if nargin == 1
-                Application.compare(constellation, output);
+                instance.application.compare(path);
             end
         end
     end
 
     methods (Static, Access = private)
         function context = boot()
-            clc; clear;
-            warning('off','all');
-            format long;
-
-            %loads project directories (use '/' at the end)
-            Constellationify.addSubFolders('./');
-            Constellationify.addSubFolders('vendors/');
-
-            context.configuration = loadjson('config.json');
-            context.messages = loadjson('messages.json');
-
-            if(exist('resources/images') ~= 2)
-                disp('unzipping resources');
-                unzip('resources.zip', 'resources/');
-            end
-
-            if(exist(context.configuration.results) ~= 2)
-                mkdir(context.configuration.results);
-                disp('unzipping results');
-                unzip('results.zip',context.configuration.results);
-            end
-            
-            if(context.configuration.octave)
-                pkg load image;
+            try
+                clc; clear;
+                warning('off','all');
+                format long;
+    
+                %loads project directories (use '/' at the end)
+                Constellationify.addSubFolders('./');
+                Constellationify.addSubFolders('vendors/');
+                Constellationify.addSubFolders('database/');
+    
+                context.configuration = loadjson('config.json');
+                context.messages = loadjson('messages.json');
+    
+                if(exist('resources/images') == 0)
+                    disp('unzipping resources');
+                    unzip('resources.zip', 'resources/');
+                end
+    
+                if(exist(context.configuration.results) == 0)
+                    mkdir(context.configuration.results);
+                    disp('unzipping results');
+                    unzip('results.zip',context.configuration.results);
+                end
+                
+                if(context.configuration.octave)
+                    pkg load image;
+                end
+            catch exception
+                disp(exception);
             end
         end
         

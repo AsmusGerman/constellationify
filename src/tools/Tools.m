@@ -12,5 +12,16 @@ classdef Tools
                 end
             end
         end
+        function output = cast(type, object)
+            %create object
+            output = eval(type);
+            for field = fieldnames(object) 
+                try
+                    output.(field{1}) = object.(field{1});
+                catch
+                    warning('Could not cast object field %s', field{1});
+                end
+            end
+        end
     end
 end

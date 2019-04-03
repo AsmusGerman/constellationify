@@ -1,0 +1,1 @@
+INSERT INTO constellation(name, stars, features) VALUES(?,?,?);

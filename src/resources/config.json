@@ -29,7 +29,7 @@
     "FeatureProcessor": {
       "params": {
         "algorithm": {
-          "name": "ALR3AllAgainstAll",
+          "name": "ALR3Centroid",
           "params": {
             "angles": 10,
             "proportions": 10
