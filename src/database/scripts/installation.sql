@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS constellation(
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
     stars POINT [],
-    features REAL []
+    features float []
 );
 
 

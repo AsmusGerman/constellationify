@@ -1,1 +1,1 @@
-SELECT * FROM obtenernconstelacionesmascercanas(?, ?, ?);
+SELECT * FROM obtenernconstelacionesmascercanas(?, ?, ?) order by dist;

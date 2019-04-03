@@ -3,9 +3,10 @@ function output = obtenerNConstelacionesMasCercanas(connection, constellation, n
     sql = fileread('scripts\obtenerNConstelacionesMasCercanas.sql');
     statement = connection.prepareStatement(sql);
 
+
     nStars = length(constellation.stars);
     stars = javaArray("org.postgresql.geometric.PGpoint", nStars);
-    for index = 1:nStars        
+    for index = 1:nStars
         stars(index) = javaObject("org.postgresql.geometric.PGpoint", constellation.stars(index).x, constellation.stars(index).y);
     end
     statement.setArray(1, connection.createArrayOf('point', stars));

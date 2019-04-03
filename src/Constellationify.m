@@ -3,12 +3,17 @@ classdef Constellationify
         application;
     end
     methods (Access = public)
-        function instance = Constellationify(path)
-            context = Constellationify.boot();
-            instance.application = Application(context);
-            instance.application.start();
-            if nargin == 1
-                instance.application.compare(path);
+        function output = Constellationify(path)
+            try
+                output = [];
+                context = Constellationify.boot();
+                instance.application = Application(context);
+                instance.application.start();
+                if nargin == 1
+                    output.data = instance.application.compare(path);
+                end
+            catch exception
+                disp(['error: ', exception.message])
             end
         end
     end
@@ -18,7 +23,7 @@ classdef Constellationify
             try
                 clc; clear;
                 warning('off','all');
-                format long;
+                format short;
     
                 %loads project directories (use '/' at the end)
                 Constellationify.addSubFolders('./');

@@ -33,12 +33,19 @@ classdef Application < Scoped
             end
         %}
 
-        function compare(instance, path)
+        function output = compare(instance, path)
             try
                 %create the new constellation
                 file = dir(path);
                 constellation = instance.controller.create(file);
                 output = instance.controller.compare(constellation, 5);
+                for index = 1 : length(output)
+                    disp(index)
+                    output(index).id
+                    output(index).distance
+                    disp('---')
+                end
+%{
 
                 cells = struct2cell(output); %converts struct to cell matrix
                 sortvals = cells(2,1,:); % gets the values of just the first field
@@ -49,7 +56,6 @@ classdef Application < Scoped
 
                 struct2table(output);
                 
-%{
  for index = 1 : nConstellations
                     output(index) = target.distance(constellations(index));
                 end 
