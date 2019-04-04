@@ -47,13 +47,13 @@ $$
 LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION obtenerNConstelacionesMasCercanas(starsBusqueda point[], featuresBusqueda float[], knn integer)
-    RETURNS TABLE(idConst integer, dist float) AS
+    RETURNS TABLE(name varchar, idConst integer, dist float) AS
 $$
 DECLARE
 constelacionBusquedaVectorCaracteristico float[];
 BEGIN	
 	constelacionBusquedaVectorCaracteristico := constelacionVectorCaracteristico(starsBusqueda, featuresBusqueda);
-	RETURN QUERY SELECT c.id, distanciaEuclidiana(constelacionBusquedaVectorCaracteristico,constelacionVectorCaracteristico(c.stars,c.features)) as distancia FROM Constellation as c ORDER BY distancia ASC LIMIT knn;
+	RETURN QUERY SELECT c.name, c.id, distanciaEuclidiana(constelacionBusquedaVectorCaracteristico,constelacionVectorCaracteristico(c.stars,c.features)) as distancia FROM Constellation as c ORDER BY distancia ASC LIMIT knn;
 END;
 $$
 LANGUAGE plpgsql;

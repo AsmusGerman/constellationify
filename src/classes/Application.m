@@ -41,6 +41,7 @@ classdef Application < Scoped
                 output = instance.controller.compare(constellation, 5);
                 for index = 1 : length(output)
                     disp(index)
+                    output(index).name
                     output(index).id
                     output(index).distance
                     disp('---')

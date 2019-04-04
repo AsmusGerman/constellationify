@@ -23,8 +23,9 @@ function output = obtenerNConstelacionesMasCercanas(connection, constellation, n
 
     result = statement.executeQuery();
     while result.next()
-        k.id = result.getInt(1);
-        k.distance = result.getFloat(2);
+        k.name = result.getString(1);
+        k.id = result.getInt(2);
+        k.distance = result.getFloat(3);
         output = [output, k];
     end
 end
